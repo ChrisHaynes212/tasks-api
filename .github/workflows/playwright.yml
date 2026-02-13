@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build and start services
-        run: docker-compose up --build -d db api
+        run: docker compose up --build -d db api
 
       - name: Wait for API health check
         run: |
@@ -29,11 +29,11 @@ jobs:
             sleep 3
           done
           echo "API did not become ready"
-          docker-compose logs api
+          docker compose logs api
           exit 1
 
       - name: Run Playwright tests
-        run: docker-compose run --rm tests
+        run: docker compose run --rm tests
 
       - name: Upload test results
         if: always()
@@ -48,8 +48,8 @@ jobs:
         if: failure()
         run: |
           mkdir -p logs
-          docker-compose logs api > logs/api.log
-          docker-compose logs db > logs/db.log
+          docker compose logs api > logs/api.log
+          docker compose logs db > logs/db.log
 
       - name: Upload logs
         if: failure()
@@ -60,4 +60,4 @@ jobs:
 
       - name: Tear down services
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v

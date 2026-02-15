@@ -1,9 +1,17 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
+import { cors } from 'hono/cors'
 import tasks from './routes/task.routes.js';
 
 const app = new Hono();
+
+// Add CORS middleware
+app.use('/*', cors({
+  origin: process.env.UI_URL || 'http://localhost:5173',
+  allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowHeaders: ['Content-Type'],
+}))
 
 // Middleware
 app.use('*', logger());
